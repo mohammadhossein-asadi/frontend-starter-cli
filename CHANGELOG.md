@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-09-18
+
+### Changed
+
+- `create` flag handling is now table-driven (`src/commands/create-flags.ts`):
+  one `CREATE_FLAG_SPECS` table drives both commander declarations and the
+  typed `CreateFlags` mapping, with accessors keyed by the camelCase fields of
+  `CreateFlags`. Reading a flag under its kebab string no longer compiles,
+  which eliminates the bug class behind the v0.1.0 `--package-manager` and
+  v0.2.0 `--dry-run` misreads.
+- `src/index.ts` exports `buildCli()`, so round-trip tests drive the real
+  declarations; 9 new unit tests verify every spec flag end-to-end, including
+  tri-state semantics (absent = undefined, not false).
+- Boolean flags are strictly tri-state: an omitted `--eslint` no longer
+  force-disables ESLint, so global-config defaults and prompts keep working
+  (regression-caught during this refactor by the new tests).
+
 ## [0.3.0] - 2026-09-18
 
 ### Added
