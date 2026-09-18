@@ -22,6 +22,8 @@ export const globalConfigSchema = z
     install: z.boolean().optional(),
     /** Preferred package-manager detection order. */
     detectionOrder: z.array(z.enum(PACKAGE_MANAGERS)).optional(),
+    /** Default project preset id (validated against the registry at runtime). */
+    preset: z.string().optional(),
   })
   .strict();
 

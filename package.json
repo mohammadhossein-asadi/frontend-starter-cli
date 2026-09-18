@@ -1,6 +1,6 @@
 {
   "name": "frontend-starter-cli",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Fast, cross-platform interactive generator for modern frontend projects (React, Next.js, Vue-ready) with TypeScript, Tailwind, ESLint, Prettier and Git.",
   "license": "MIT",
   "type": "module",

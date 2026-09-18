@@ -62,6 +62,11 @@ export function longFlagOf(key: string): string {
  * field), never a second hand-rolled mapping.
  */
 export const CREATE_FLAG_SPECS: readonly CreateFlagSpec[] = [
+  {
+    key: "preset",
+    boolean: false,
+    description: "start from a preset: blog | dashboard | landing-page",
+  },
   { key: "framework", boolean: false, description: "react | next | vue" },
   { key: "language", boolean: false, description: "typescript | javascript" },
   { key: "typescript", boolean: true, description: "shorthand for --language typescript" },
@@ -149,6 +154,7 @@ export function boolFlag(opts: Record<string, unknown>, key: BooleanFlagKey): bo
  */
 export function parseCreateFlags(opts: Record<string, unknown>, globalYes: boolean): CreateFlags {
   return {
+    preset: opt(opts, "preset"),
     framework: opt(opts, "framework"),
     language: opt(opts, "language") as CreateFlags["language"],
     typescript: boolFlag(opts, "typescript"),

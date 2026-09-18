@@ -6,6 +6,7 @@ import {
   mergeWithGlobalConfig,
   type GlobalConfig,
 } from "../config/global-config.js";
+import { expandPreset, resolvePreset } from "../config/presets.js";
 import { resolveTemplate } from "../templates/registry.js";
 import { generateFiles } from "../generator/generator.js";
 import { resolveTargetDir } from "../utils/paths.js";
@@ -36,6 +37,7 @@ import { gitAvailable, initGitRepo } from "../services/git.js";
  */
 
 export interface CreateFlags {
+  preset?: string;
   framework?: string;
   language?: "typescript" | "javascript";
   styling?: string;
@@ -66,8 +68,15 @@ export async function runCreate(
   const projectName =
     projectNameArg !== undefined ? assertValidProjectName(projectNameArg) : undefined;
 
-  // ---- 2. Flags → partial config, merged over global config -----------
-  const partial = mergeWithGlobalConfig(flagsToPartialConfig(flags), global);
+  // ---- 2. Flags → preset → partial config, merged over global config --
+  // Precedence: flags > preset > global config > prompts > defaults. The
+  // preset never overrides an explicit flag, so `--preset blog --framework
+  // vue` yields Vue with the blog's styling and extras.
+  const preset = resolvePreset(flags.preset, global.preset);
+  if (preset !== undefined) {
+    logger.step(`Starting point: ${preset.label}`);
+  }
+  const partial = expandPreset(preset, mergeWithGlobalConfig(flagsToPartialConfig(flags), global));
 
   // ---- 3. Package-manager resolution ----------------------------------
   // Explicit choice (flag or global config) must exist on PATH. Otherwise

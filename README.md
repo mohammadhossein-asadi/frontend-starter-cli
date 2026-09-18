@@ -103,21 +103,22 @@ frontend-starter create my-app \
 
 ## `create` flags
 
-| Flag                            | Values                             | Notes                                                             |
-| ------------------------------- | ---------------------------------- | ----------------------------------------------------------------- |
-| `--framework`                   | `react`, `next`                    | React uses Vite; Next uses the App Router                         |
-| `--typescript` / `--javascript` |                                    | shorthand for `--language`                                        |
-| `--language`                    | `typescript`, `javascript`         |                                                                   |
-| `--tailwind`                    |                                    | shorthand for `--styling tailwind`                                |
-| `--styling`                     | `tailwind`, `css-modules`, `plain` |                                                                   |
-| `--package-manager`             | `pnpm`, `npm`, `yarn`, `bun`       | must be installed; never auto-installed                           |
-| `--eslint` / `--no-eslint`      |                                    | default: on                                                       |
-| `--prettier` / `--no-prettier`  |                                    | default: on                                                       |
-| `--git` / `--no-git`            |                                    | default: on                                                       |
-| `--install` / `--no-install`    |                                    | default: on (interactive), off (`--yes`)                          |
-| `--force`                       |                                    | overwrite files in an existing non-empty directory                |
-| `--dry-run`                     |                                    | preview the file tree and `package.json` without writing anything |
-| `--yes`                         |                                    | non-interactive; never prompt                                     |
+| Flag                            | Values                              | Notes                                                             |
+| ------------------------------- | ----------------------------------- | ----------------------------------------------------------------- |
+| `--preset`                      | `blog`, `dashboard`, `landing-page` | one choice for framework + styling + extras                       |
+| `--framework`                   | `react`, `next`, `vue`              | React uses Vite; Next uses the App Router                         |
+| `--typescript` / `--javascript` |                                     | shorthand for `--language`                                        |
+| `--language`                    | `typescript`, `javascript`          |                                                                   |
+| `--tailwind`                    |                                     | shorthand for `--styling tailwind`                                |
+| `--styling`                     | `tailwind`, `css-modules`, `plain`  |                                                                   |
+| `--package-manager`             | `pnpm`, `npm`, `yarn`, `bun`        | must be installed; never auto-installed                           |
+| `--eslint` / `--no-eslint`      |                                     | default: on                                                       |
+| `--prettier` / `--no-prettier`  |                                     | default: on                                                       |
+| `--git` / `--no-git`            |                                     | default: on                                                       |
+| `--install` / `--no-install`    |                                     | default: on (interactive), off (`--yes`)                          |
+| `--force`                       |                                     | overwrite files in an existing non-empty directory                |
+| `--dry-run`                     |                                     | preview the file tree and `package.json` without writing anything |
+| `--yes`                         |                                     | non-interactive; never prompt                                     |
 
 Global flags: `--verbose` (detailed diagnostics), `--quiet` (suppress
 informational output).
@@ -129,6 +130,20 @@ With `--yes` (or no TTY), the four core choices are required
 ESLint, Prettier and Git default to **on**; dependency installation defaults to
 **off** so CI runs never hit the network unexpectedly. Override any of them
 explicitly with `--eslint=false`-style negations (`--no-eslint`, `--install`, …).
+
+### Starting points (presets)
+
+Pick an opinionated bundle in one shot — interactively (the "Starting point"
+question at the top of the flow) or with a flag:
+
+```bash
+frontend-starter create my-blog --preset blog
+```
+
+Presets bundle framework, language, styling and extras; the package manager
+stays machine-specific and is auto-detected. Precedence is `flags > preset >
+global config`, so `--preset blog --framework vue` yields Vue with the blog's
+styling and extras. `frontend-starter templates` lists the available presets.
 
 ### Preview without generating
 
