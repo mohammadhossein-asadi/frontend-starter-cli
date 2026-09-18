@@ -16,6 +16,7 @@ import { logger } from "../utils/logger.js";
 import {
   EXIT_CODES,
   FRAMEWORKS,
+  allowedLanguages,
   type PackageManager,
   type ProjectConfig,
   type ResolvedTemplate,
@@ -240,6 +241,19 @@ function flagsToPartialConfig(flags: CreateFlags): Partial<ProjectConfig> {
       });
     }
     framework = flags.framework as ProjectConfig["framework"];
+  }
+
+  // Angular generates TypeScript-only projects; reject the combination early
+  // with a targeted message instead of letting zod surface a generic failure.
+  if (framework !== undefined && language === "javascript") {
+    if (!allowedLanguages(framework).includes("javascript")) {
+      throw new ValidationError(
+        `Framework "${framework}" does not support JavaScript; generate it with TypeScript.`,
+        {
+          hint: `--framework ${framework} requires TypeScript. Drop --javascript (or pass --typescript).`,
+        },
+      );
+    }
   }
 
   // Styling: --tailwind is a shorthand for --styling tailwind.

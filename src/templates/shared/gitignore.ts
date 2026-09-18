@@ -1,3 +1,5 @@
+import type { Framework } from "../../types.js";
+
 /** Shared .gitignore text for every generated project. */
 export function sharedGitignore(): string {
   return [
@@ -34,7 +36,7 @@ export function sharedGitignore(): string {
 }
 
 /** Framework-specific additions appended after the shared block. */
-export function frameworkGitignore(framework: "react" | "next" | "vue"): string {
+export function frameworkGitignore(framework: Framework): string {
   if (framework === "next") {
     return [
       "# next.js",
@@ -46,9 +48,15 @@ export function frameworkGitignore(framework: "react" | "next" | "vue"): string 
       "",
     ].join("\n");
   }
+  if (framework === "angular") {
+    return ["# angular", ".angular/", "*.tsbuildinfo", ""].join("\n");
+  }
+  if (framework === "astro") {
+    return ["# astro", ".astro/", ""].join("\n");
+  }
   return ["# vite", "*.local", ""].join("\n");
 }
 
-export function fullGitignore(framework: "react" | "next" | "vue"): string {
+export function fullGitignore(framework: Framework): string {
   return `${sharedGitignore()}${frameworkGitignore(framework)}`;
 }

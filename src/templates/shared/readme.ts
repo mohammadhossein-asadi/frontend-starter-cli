@@ -1,4 +1,4 @@
-import type { PackageManager, ProjectConfig } from "../../types.js";
+import type { Framework, PackageManager, ProjectConfig } from "../../types.js";
 
 /**
  * README renderer for generated projects. Uses string concatenation for code
@@ -42,16 +42,32 @@ function pmName(pm: PackageManager): string {
   return names[pm];
 }
 
+const FRAMEWORK_TITLE: Record<Framework, string> = {
+  react: "React + Vite",
+  next: "Next.js",
+  vue: "Vue + Vite",
+  svelte: "Svelte + Vite",
+  solid: "SolidJS + Vite",
+  qwik: "Qwik City (Vite)",
+  astro: "Astro",
+  angular: "Angular",
+};
+
 function frameworkTitle(config: ProjectConfig): string {
-  switch (config.framework) {
-    case "next":
-      return "Next.js";
-    case "vue":
-      return "Vue + Vite";
-    default:
-      return "React + Vite";
-  }
+  return FRAMEWORK_TITLE[config.framework];
 }
+
+/** Docs site linked in the generated README, per framework. */
+const FRAMEWORK_DOCS: Record<Framework, string> = {
+  react: "vite.dev",
+  next: "nextjs.org",
+  vue: "vite.dev",
+  svelte: "vite.dev",
+  solid: "vite.dev",
+  qwik: "qwik.dev",
+  astro: "astro.build",
+  angular: "angular.dev",
+};
 
 export function renderReadme(config: ProjectConfig): string {
   const dev = pmRunCommand(config, "dev");
@@ -81,9 +97,7 @@ export function renderReadme(config: ProjectConfig): string {
   const lines: (string | null)[] = [
     `# ${config.projectName}`,
     "",
-    `A [${frameworkTitle(config)}](https://${
-      config.framework === "next" ? "nextjs.org" : "vite.dev"
-    }) project generated with [frontend-starter](https://github.com/mohammadhossein-asadi/frontend-starter-cli).`,
+    `A [${frameworkTitle(config)}](https://${FRAMEWORK_DOCS[config.framework]}) project generated with [frontend-starter](https://github.com/mohammadhossein-asadi/frontend-starter-cli).`,
     "",
     "## Stack",
     "",

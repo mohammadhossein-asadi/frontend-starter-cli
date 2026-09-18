@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-09-18
+
+### Added
+
+- **Five new frameworks**: Svelte 5, SolidJS, Qwik (Qwik City) and Astro with
+  TypeScript and JavaScript slices, plus Angular 20 (TypeScript-only, stable
+  zoneless change detection, no zone.js). Every template was verified with a
+  real `npm install` + production build + clean ESLint run before shipping.
+- Tailwind v4 wiring per toolchain: Vite plugin for react/vue/svelte/solid/qwik,
+  PostCSS for next, `vite.plugins` inside `astro.config.mjs` for astro, and
+  `.postcssrc.json` for angular (its built-in PostCSS pipeline).
+- `--framework` validation, the interactive picker, the `templates` command,
+  generated READMEs and `.gitignore`s are all registry-driven - the new
+  frameworks appear everywhere without further wiring.
+- Angular + `--javascript` is rejected with a targeted message through every
+  path: flags, global config and presets (zod cross-field check).
+
+### Fixed
+
+- ESLint configs for JavaScript slices now enable JSX parsing via
+  `parserOptions.ecmaFeatures.jsx` - generated React `.jsx` files crashed
+  `eslint` with "Unexpected token <" since 0.1.0, and the same class of bug
+  would have hit Solid/Qwik JS projects.
+- React JS templates silence the espree `no-unused-vars` false positive on
+  capitalized JSX components (same workaround as create-vite).
+- Qwik lint wiring uses the plugin's flat-config shape correctly; its typed
+  rules get `projectService` scoped to source files only.
+
+### Changed
+
+- `eslint-plugin-astro` pinned to `^1.7.0`: the 2.x/3.x line requires
+  ESLint >= 10 and Node >= 22, above this tool's support floor.
+- Qwik projects pin Vite ^7 (plugin peer range `>=5 <8`); Astro projects pin
+  Astro ^5 (v6+/7 need Node >= 22.12). Both pins carry explanatory comments.
+
 ## [0.4.0] - 2026-09-18
 
 ### Added

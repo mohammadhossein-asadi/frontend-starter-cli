@@ -90,6 +90,19 @@ Key invariants:
 No changes to the generator, CLI wiring, or commands are needed — that is the
 point of the registry design.
 
+Notes from adding the 0.5.0 frameworks:
+
+- If a framework is language-constrained (Angular is TypeScript-only), list it
+  in `TYPESCRIPT_ONLY_FRAMEWORKS` in `src/types.ts`; the prompts, flag
+  validation and a zod cross-field check all derive from it.
+- Export a `viteConfig(withTailwind: boolean)` helper from Vite-based parts so
+  the Tailwind overlay re-emits the config with the plugin from the same
+  source of truth.
+- Verify the framework's ESLint plugin export shape before wiring it: some
+  plugins export flat-config arrays, others legacy eslintrc objects (and a few
+  export both under different names). The Qwik and angular-eslint configs in
+  `overlays.ts` show both handling patterns.
+
 ## Adding a styling or tooling overlay
 
 Follow `overlays/styling/tailwind` as the model: a `stylesheetFor()` branch,

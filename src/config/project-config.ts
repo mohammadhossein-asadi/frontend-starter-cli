@@ -1,5 +1,12 @@
 import { z } from "zod";
-import { FRAMEWORKS, LANGUAGES, PACKAGE_MANAGERS, STYLINGS, type ProjectConfig } from "../types.js";
+import {
+  FRAMEWORKS,
+  LANGUAGES,
+  PACKAGE_MANAGERS,
+  STYLINGS,
+  allowedLanguages,
+  type ProjectConfig,
+} from "../types.js";
 import { ValidationError } from "../utils/errors.js";
 
 /**
@@ -20,9 +27,24 @@ export const projectConfigSchema = z.object({
   force: z.boolean(),
 });
 
+/**
+ * Cross-field invariant: a framework's language must be one it supports
+ * (Angular is TypeScript-only). Enforced here so the constraint holds for
+ * every path into the resolver — flags, global config and presets.
+ */
+export const validatedProjectConfigSchema = projectConfigSchema.superRefine((config, ctx) => {
+  if (!allowedLanguages(config.framework).includes(config.language)) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["language"],
+      message: `framework "${config.framework}" does not support language "${config.language}"`,
+    });
+  }
+});
+
 /** Validate a complete ProjectConfig, throwing a readable ValidationError. */
 export function assertValidConfig(config: unknown): ProjectConfig {
-  const parsed = projectConfigSchema.safeParse(config);
+  const parsed = validatedProjectConfigSchema.safeParse(config);
   if (!parsed.success) {
     const issues = parsed.error.issues
       .map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`)

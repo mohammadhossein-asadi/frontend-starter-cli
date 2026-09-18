@@ -22,7 +22,7 @@ describe("globalConfigSchema", () => {
 
   it("rejects invalid enum values", () => {
     expect(globalConfigSchema.safeParse({ packageManager: "npm10" }).success).toBe(false);
-    expect(globalConfigSchema.safeParse({ framework: "angular" }).success).toBe(false);
+    expect(globalConfigSchema.safeParse({ framework: "ember" }).success).toBe(false);
   });
 });
 
@@ -122,7 +122,7 @@ describe("assertValidConfig", () => {
       install: true,
       force: false,
     };
-    expect(() => assertValidConfig({ ...base, framework: "angular" })).toThrow();
+    expect(() => assertValidConfig({ ...base, framework: "ember" })).toThrow();
     expect(() => assertValidConfig({ ...base, packageManager: "cargo" })).toThrow();
   });
 });

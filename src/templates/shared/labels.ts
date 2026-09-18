@@ -9,6 +9,11 @@ export const FRAMEWORK_LABELS: Record<Framework, string> = {
   react: "React (Vite)",
   next: "Next.js (App Router)",
   vue: "Vue (Vite)",
+  svelte: "Svelte (Vite)",
+  solid: "SolidJS (Vite)",
+  qwik: "Qwik (Vite)",
+  astro: "Astro",
+  angular: "Angular",
 };
 
 /** Convenience helper: labels for a subset of frameworks, in given order. */
