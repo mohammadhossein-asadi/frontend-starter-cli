@@ -1,0 +1,4 @@
+# Normalize line endings across platforms; the CLI writes LF in generated projects.
+* text=auto eol=lf
+*.png binary
+*.ico binary

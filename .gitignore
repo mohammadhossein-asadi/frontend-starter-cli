@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+npm-debug.log*
+*.local
+
+# codebuff workspace marker
+.freebuff/

@@ -1,0 +1,73 @@
+{
+  "name": "frontend-starter-cli",
+  "version": "0.3.0",
+  "description": "Fast, cross-platform interactive generator for modern frontend projects (React, Next.js, Vue-ready) with TypeScript, Tailwind, ESLint, Prettier and Git.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "frontend-starter": "bin/frontend-starter.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "bin",
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "keywords": [
+    "frontend",
+    "starter",
+    "scaffold",
+    "generator",
+    "cli",
+    "react",
+    "nextjs",
+    "vite",
+    "tailwind",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohammadhossein-asadi/frontend-starter-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mohammadhossein-asadi/frontend-starter-cli/issues"
+  },
+  "homepage": "https://github.com/mohammadhossein-asadi/frontend-starter-cli#readme",
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.8.1",
+    "commander": "^14.0.3",
+    "execa": "^9.6.1",
+    "picocolors": "^1.1.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^20.19.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^9.39.5",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.8",
+    "tsup": "^8.5.1",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.70.0",
+    "vitest": "^4.1.11"
+  }
+}
