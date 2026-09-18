@@ -5,7 +5,7 @@ labels: enhancement, templates
 ---
 
 **Which framework/feature?**
-e.g. Vue, SvelteKit, Astro, Solid, Tauri preset…
+e.g. SvelteKit, SolidStart, Nuxt, Remix, Tauri preset…
 
 **Why?**
 Who needs this and what does it unlock?
