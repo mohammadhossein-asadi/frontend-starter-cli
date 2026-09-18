@@ -44,10 +44,13 @@ describe("generateFiles", () => {
 
   it("rejects absolute paths", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "fsc-gen-"));
+    // Absolute on every platform, unlike a hardcoded drive letter.
+    const absoluteEvil = path.join(mkdtempSync(path.join(tmpdir(), "fsc-gen-")), "evil.txt");
     try {
-      expect(() => generateFiles(templateWith({ "C:/Windows/evil.txt": "nope" }), dir)).toThrow(
+      expect(() => generateFiles(templateWith({ [absoluteEvil]: "nope" }), dir)).toThrow(
         TargetDirectoryError,
       );
+      // Rooted POSIX path is absolute on POSIX and Windows alike.
       expect(() => generateFiles(templateWith({ "/etc/evil.txt": "nope" }), dir)).toThrow(
         TargetDirectoryError,
       );
