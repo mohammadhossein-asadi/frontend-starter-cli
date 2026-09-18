@@ -1,62 +1,66 @@
+<div align="center">
+
 # frontend-starter
 
+**Scaffold modern frontend projects in seconds — React, Next.js, Vue, Svelte,
+SolidJS, Qwik, Astro and Angular, with TypeScript, Tailwind v4, ESLint,
+Prettier and Git wired the right way on Windows, Linux and macOS.**
+
 [![CI](https://github.com/mohammadhossein-asadi/frontend-starter-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mohammadhossein-asadi/frontend-starter-cli/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/frontend-starter-cli.svg)](https://www.npmjs.com/package/frontend-starter-cli)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![npm](https://img.shields.io/npm/v/frontend-starter-cli)](https://www.npmjs.com/package/frontend-starter-cli)
+[![node](https://img.shields.io/node/v/frontend-starter-cli)](https://www.npmjs.com/package/frontend-starter-cli)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Fast, cross-platform generator for modern frontend projects.
-Windows · Linux · macOS — one command, a fully configured project.
+</div>
 
-```bash
-npx frontend-starter-cli
-```
+---
 
-> **Note:** the npm package is published as **`frontend-starter-cli`** (the plain
-> `frontend-starter` name was already taken). The installed command is
-> `frontend-starter`.
+## Why
 
-## Choose → Configure → Generate → Install → Run
+`create-vite` and friends are great — if you know exactly which flags to pass
+and don't mind assembling ESLint, Prettier, Tailwind and Git yourself.
+**frontend-starter** asks a few friendly questions (or takes flags, or reads
+your saved defaults) and generates a _complete, coherent_ project:
 
-`frontend-starter` asks a handful of questions (framework, language, styling,
-package manager, tooling) and generates a clean, production-ready project —
-then optionally installs dependencies and initializes Git.
+- ✅ framework + language + styling + tooling composed into one project
+- ✅ **actually working** Tailwind v4 — the Vite plugin / PostCSS config /
+  `.postcssrc.json` is emitted per toolchain, so CSS is compiled, not imported
+- ✅ flat-config ESLint with the right plugin per framework (react-hooks,
+  eslint-plugin-vue, eslint-plugin-svelte, qwik, angular-eslint, …)
+- ✅ Prettier (with Svelte/Astro plugins where needed) + `.prettierignore`
+- ✅ Git initialized with a clean first commit (optional)
+- ✅ safe by default — never touches an existing directory without `--force`
+- ✅ offline generation: files are written from bundled templates _before_ any
+  network call, so a failed install never leaves a half-written project
 
-```
-◆  frontend-starter
-│
-●  Project name: my-app
-│
-●  Choose framework
-│  ● React (Vite)
-│  ○ Next.js (App Router)
-│
-●  Choose language
-│  ● TypeScript
-│  ○ JavaScript
-│
-●  Choose styling
-│  ● Tailwind CSS v4
-│  ○ CSS Modules
-│  ○ Plain CSS
-└  Your project is ready.
-```
+Every template is verified with a real `npm install` + production build +
+clean lint run on CI (Ubuntu / Windows / macOS × Node 20 / 22 / 24).
 
-## Features
+## Supported frameworks
 
-- **Interactive by default** — fast, friendly prompts; every answer can be
-  provided as a flag instead
-- **Non-interactive mode** — full flag support for CI, scripts and Docker
-- **Cross-platform** — Windows (including reserved-name and `.cmd` handling),
-  Linux, macOS; no shell-specific assumptions
-- **Offline generation** — templates are generated from bundled code, so a
-  failed install never leaves you with a half-written project
-- **Safe by default** — refuses to touch existing directories without explicit
-  consent; validates names against npm and Windows rules
-- **Composable templates** — framework base + language slice + styling +
-  tooling overlays, merged into one coherent project
-- **Environment doctor** — `frontend-starter doctor` explains exactly what is
-  missing and how to fix it
-- **Global defaults** — save your preferences once, get less prompting forever
+| Framework | Bundler / Router | Languages              | Styling                             |
+| --------- | ---------------- | ---------------------- | ----------------------------------- |
+| React     | Vite             | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
+| Next.js   | App Router       | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
+| Vue 3     | Vite             | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
+| Svelte 5  | Vite             | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
+| SolidJS   | Vite             | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
+| Qwik      | Qwik City (Vite) | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
+| Astro     | Astro (Vite)     | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
+| Angular   | @angular/build   | TypeScript             | Tailwind v4, CSS Modules, Plain CSS |
+
+Notes on the versions we ship:
+
+- **Angular** projects are TypeScript-only (as its own CLI is) and use stable
+  **zoneless** change detection — no `zone.js`, no polyfills.
+- **Qwik** pins Vite `^7` until its plugin's peer range allows Vite 8.
+- **Astro** pins Astro `^5` until its toolchain supports Node 20.19.
+- **React** is the React 19 + plugin-react line; **Svelte** uses runes
+  (`$state`) with `svelte-check` in TypeScript projects.
+
+Adding a framework is a registry entry away — see
+[CONTRIBUTING.md](CONTRIBUTING.md); Vue's implementation is the reference
+example.
 
 ## Installation
 
@@ -70,7 +74,7 @@ or run it once without installing:
 npx frontend-starter-cli
 ```
 
-Requires Node.js ≥ 20.19.
+Requires **Node.js ≥ 20.19** (CI tests 20, 22 and 24).
 
 ## Quick start
 
@@ -87,6 +91,29 @@ frontend-starter create my-app \
   --typescript \
   --tailwind \
   --package-manager pnpm
+
+# an opinionated bundle in one shot
+frontend-starter create my-blog --preset blog
+
+# look before you leap
+frontend-starter create my-app --framework next --typescript --tailwind --dry-run
+```
+
+The interactive flow (shortened):
+
+```
+◆  Starting point
+❯ Blog           — content-focused site with Tailwind and full tooling
+  Dashboard      — data-heavy app UI with Tailwind and full tooling
+  Landing page   — single marketing page with Tailwind, minimal tooling
+  Custom         — choose each option yourself
+
+◆  Choose framework
+❯ React (Vite)
+  Next.js (App Router)
+  Vue (Vite)
+  Svelte (Vite)
+  …and Solid, Qwik, Astro, Angular
 ```
 
 ## Commands
@@ -101,49 +128,49 @@ frontend-starter create my-app \
 | `frontend-starter --version`     | Print the version                                     |
 | `frontend-starter --help`        | Show help                                             |
 
+Global flags: `--verbose` (detailed diagnostics) and `--quiet` (suppress
+informational output).
+
 ## `create` flags
 
-| Flag                            | Values                                                                | Notes                                                                                                        |
-| ------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `--preset`                      | `blog`, `dashboard`, `landing-page`                                   | one choice for framework + styling + extras                                                                  |
-| `--framework`                   | `react`, `next`, `vue`, `svelte`, `solid`, `qwik`, `astro`, `angular` | React/Vue/Svelte/Solid/Qwik use Vite; Next uses the App Router; Astro and Angular bring their own toolchains |
-| `--typescript` / `--javascript` |                                                                       | shorthand for `--language`                                                                                   |
-| `--language`                    | `typescript`, `javascript`                                            |                                                                                                              |
-| `--tailwind`                    |                                                                       | shorthand for `--styling tailwind`                                                                           |
-| `--styling`                     | `tailwind`, `css-modules`, `plain`                                    |                                                                                                              |
-| `--package-manager`             | `pnpm`, `npm`, `yarn`, `bun`                                          | must be installed; never auto-installed                                                                      |
-| `--eslint` / `--no-eslint`      |                                                                       | default: on                                                                                                  |
-| `--prettier` / `--no-prettier`  |                                                                       | default: on                                                                                                  |
-| `--git` / `--no-git`            |                                                                       | default: on                                                                                                  |
-| `--install` / `--no-install`    |                                                                       | default: on (interactive), off (`--yes`)                                                                     |
-| `--force`                       |                                                                       | overwrite files in an existing non-empty directory                                                           |
-| `--dry-run`                     |                                                                       | preview the file tree and `package.json` without writing anything                                            |
-| `--yes`                         |                                                                       | non-interactive; never prompt                                                                                |
-
-Global flags: `--verbose` (detailed diagnostics), `--quiet` (suppress
-informational output).
+| Flag                            | Values                                                                | Notes                                        |
+| ------------------------------- | --------------------------------------------------------------------- | -------------------------------------------- |
+| `--preset`                      | `blog`, `dashboard`, `landing-page`                                   | one choice for framework + styling + extras  |
+| `--framework`                   | `react`, `next`, `vue`, `svelte`, `solid`, `qwik`, `astro`, `angular` | see the frameworks table above               |
+| `--language`                    | `typescript`, `javascript`                                            |                                              |
+| `--typescript` / `--javascript` |                                                                       | shorthand for `--language`                   |
+| `--styling`                     | `tailwind`, `css-modules`, `plain`                                    |                                              |
+| `--tailwind`                    |                                                                       | shorthand for `--styling tailwind`           |
+| `--package-manager`             | `pnpm`, `npm`, `yarn`, `bun`                                          | must be installed; never auto-installed      |
+| `--eslint` / `--no-eslint`      |                                                                       | default: on                                  |
+| `--prettier` / `--no-prettier`  |                                                                       | default: on                                  |
+| `--git` / `--no-git`            |                                                                       | default: on                                  |
+| `--install` / `--no-install`    |                                                                       | default: on (interactive), off (`--yes`)     |
+| `--force`                       |                                                                       | add files to an existing non-empty directory |
+| `--dry-run`                     |                                                                       | preview the file tree + `package.json`       |
+| `--yes`                         |                                                                       | non-interactive; never prompt                |
 
 ### Non-interactive defaults
 
 With `--yes` (or no TTY), the four core choices are required
-(`--framework`, `--typescript|--javascript`, `--styling`, `--package-manager`).
-ESLint, Prettier and Git default to **on**; dependency installation defaults to
-**off** so CI runs never hit the network unexpectedly. Override any of them
-explicitly with `--eslint=false`-style negations (`--no-eslint`, `--install`, …).
+(`--framework`, `--typescript|--javascript`, `--styling`,
+`--package-manager`). ESLint, Prettier and Git default to **on**; dependency
+installation defaults to **off** so CI runs never hit the network
+unexpectedly. Override any of them explicitly (`--no-eslint`, `--install`, …).
 
 ### Starting points (presets)
 
-Pick an opinionated bundle in one shot — interactively (the "Starting point"
-question at the top of the flow) or with a flag:
+A preset bundles framework, language, styling and extras into one choice; the
+package manager stays machine-specific and is auto-detected. Pick it
+interactively (the "Starting point" question) or by flag:
 
 ```bash
 frontend-starter create my-blog --preset blog
 ```
 
-Presets bundle framework, language, styling and extras; the package manager
-stays machine-specific and is auto-detected. Precedence is `flags > preset >
-global config`, so `--preset blog --framework vue` yields Vue with the blog's
-styling and extras. `frontend-starter templates` lists the available presets.
+Precedence is `flags > preset > global config`, so
+`--preset blog --framework vue` yields Vue with the blog's styling and extras.
+`frontend-starter templates` lists the available presets.
 
 ### Preview without generating
 
@@ -151,30 +178,10 @@ styling and extras. `frontend-starter templates` lists the available presets.
 frontend-starter create my-app --framework next --typescript --tailwind --dry-run
 ```
 
-Prints every file the generator would create (plus the full `package.json`) and
-writes nothing. If the target directory already exists and is not empty, the
-preview warns instead of failing — handy for checking a layout before a real
-generation or in CI.
-
-## Supported frameworks
-
-| Framework | Bundler/Router   | Languages              | Styling                             |
-| --------- | ---------------- | ---------------------- | ----------------------------------- |
-| React     | Vite             | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
-| Next.js   | App Router       | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
-| Vue 3     | Vite             | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
-| Svelte 5  | Vite             | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
-| SolidJS   | Vite             | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
-| Qwik      | Qwik City (Vite) | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
-| Astro     | Astro (Vite)     | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
-| Angular   | @angular/build   | TypeScript             | Tailwind v4, CSS Modules, Plain CSS |
-
-Angular generates TypeScript-only projects (its CLI offers nothing else) and
-ships zoneless change detection with no zone.js dependency. Qwik pins Vite ^7
-until its plugin supports Vite 8; Astro pins Astro ^5 until its toolchain
-supports Node 20.19's floor.
-
-Adding a framework is a registry entry away
+Prints every file the generator would create (plus the full `package.json`)
+and writes nothing. If the target directory already exists and is not empty,
+the preview warns instead of failing — handy for checking a layout before a
+real generation or in CI.
 
 ## Supported package managers
 
@@ -187,7 +194,8 @@ never installs package managers on its own.
 
 ## Configuration
 
-Global defaults live in a platform-appropriate directory:
+Save your defaults once and answer fewer questions forever
+(`frontend-starter init` writes the file for you):
 
 - Windows: `%APPDATA%\frontend-starter\config.json`
 - macOS: `~/Library/Preferences/frontend-starter/config.json`
@@ -207,9 +215,10 @@ Global defaults live in a platform-appropriate directory:
 }
 ```
 
-Precedence: **flags > global config > prompts > defaults**.
+Precedence: **flags > preset > global config > prompts > defaults**.
 The file may also live at `~/.frontend-starter/config.json`, and
-`FRONTEND_STARTER_CONFIG_DIR` overrides the directory for tests and sandboxes.
+`FRONTEND_STARTER_CONFIG_DIR` overrides the directory (useful for tests and
+sandboxes).
 
 ## Exit codes
 
@@ -255,21 +264,42 @@ npm test             # unit + integration tests
 npm run build        # production build to dist/
 npm run lint         # eslint
 npm run typecheck    # tsc --noEmit
+npm run format       # prettier
 ```
 
-## Testing
+### Testing
 
 - **Unit tests** cover name validation, JSON merging, template composition for
-  every framework × language × styling combination, config precedence and
-  doctor reporting.
+  every framework × language × styling combination, config precedence, preset
+  expansion and doctor reporting.
 - **Integration tests** execute the built CLI end-to-end in temp directories:
-  generation for multiple stacks, flag validation, existing-directory
-  protection, error paths, exit codes.
+  real generation, `--dry-run` previews (asserting _nothing_ is written),
+  flag validation, Angular's TypeScript-only rule, existing-directory
+  protection, git initialization and exit codes.
+
+CI runs the full matrix on every push and PR:
+
+```
+ubuntu-latest · windows-latest · macos-latest  ×  Node 20 · 22 · 24
+```
+
+### Architecture in one paragraph
+
+Everything is registry-driven. A validated `ProjectConfig` flows into
+`resolveTemplate()`, which stacks **template parts**: a framework base
+(`src/templates/<framework>/`), a language slice, styling overlays
+(stylesheet + the framework's Tailwind wiring), tooling overlays (ESLint,
+Prettier), then shared files (`package.json` composed from ordered JSON
+fragments, README, `.gitignore`). CLI flags are declared _and_ read from one
+typed spec table (`src/commands/create-flags.ts`), so a flag can never exist
+in help text but not in code. Adding a framework touches templates and the
+registry — never the generator, commands or prompts. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for the step-by-step tour.
 
 ## Publishing
 
-Releases are automated: push a tag (`v0.1.1`) and the release workflow builds,
-tests and publishes with provenance. For a manual release:
+Releases are automated: push a tag (`v0.5.0`) and the release workflow builds,
+tests and publishes to npm with provenance. For a manual release:
 
 ```bash
 npm run build
@@ -278,9 +308,10 @@ npm publish
 
 ## Contributing
 
-Contributions welcome — new templates, prompt improvements and fixes. Read
-[CONTRIBUTING.md](CONTRIBUTING.md) for the architecture tour and the
-step-by-step guide to adding a framework.
+Contributions welcome — new templates, presets, prompt improvements and
+fixes. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the architecture tour and
+the step-by-step guide to adding a framework. Good first issues: additional
+presets, more `doctor` checks, editor config templates.
 
 ## License
 
