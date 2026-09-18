@@ -27,9 +27,19 @@
     "cli",
     "react",
     "nextjs",
+    "vue",
+    "svelte",
+    "solidjs",
+    "qwik",
+    "astro",
+    "angular",
     "vite",
     "tailwind",
-    "typescript"
+    "tailwindcss",
+    "typescript",
+    "javascript",
+    "eslint",
+    "prettier"
   ],
   "repository": {
     "type": "git",
