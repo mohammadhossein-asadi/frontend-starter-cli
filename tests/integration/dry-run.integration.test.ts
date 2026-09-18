@@ -108,6 +108,55 @@ describe("create --dry-run (end-to-end)", () => {
     expect(vue.exitCode).toBe(0);
     expect(vue.stdout).toContain("App.vue");
     expect(vue.stdout).toContain("vite.config.ts");
+
+    // 8-framework expansion: one signature file per new framework. The
+    // preview tree groups by directory, so assert on basenames.
+    const signatureFiles: Record<string, string> = {
+      svelte: "App.svelte",
+      solid: "index.tsx",
+      qwik: "entry.ssr.tsx",
+      astro: "index.astro",
+      angular: "angular.json",
+    };
+    for (const [framework, signature] of Object.entries(signatureFiles)) {
+      const args = [
+        "create",
+        `p-${framework}`,
+        "--framework",
+        framework,
+        "--typescript",
+        "--package-manager",
+        "npm",
+        "--no-git",
+        "--no-install",
+        "--yes",
+        "--dry-run",
+      ];
+      args.push("--tailwind");
+      const result = await runCli(args, cwd);
+      expect(result.exitCode, `${framework} dry-run exit`).toBe(0);
+      expect(result.stdout, `${framework} dry-run preview`).toContain(signature);
+    }
+  }, 30000);
+
+  it("rejects --framework angular combined with --javascript", async () => {
+    const cwd = tempWorkdir();
+    const result = await runCli(
+      [
+        "create",
+        "p-angular-js",
+        "--framework",
+        "angular",
+        "--javascript",
+        "--package-manager",
+        "npm",
+        "--yes",
+      ],
+      cwd,
+    );
+    expect(result.exitCode).not.toBe(0);
+    expect(result.stderr).toContain("does not support JavaScript");
+    expect(existsSync(path.join(cwd, "p-angular-js"))).toBe(false);
   });
 
   it("warns (but does not fail) when the target exists and is non-empty", async () => {

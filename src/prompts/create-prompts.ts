@@ -1,5 +1,11 @@
 import * as p from "@clack/prompts";
-import { FRAMEWORKS, LANGUAGES, STYLINGS, type PackageManager } from "../types.js";
+import {
+  FRAMEWORKS,
+  type LANGUAGES,
+  STYLINGS,
+  allowedLanguages,
+  type PackageManager,
+} from "../types.js";
 import { FRAMEWORK_LABELS } from "../templates/shared/labels.js";
 import { PRESETS, type PresetValues } from "../config/presets.js";
 import { EnvironmentError } from "../utils/errors.js";
@@ -113,12 +119,18 @@ export async function promptForMissing(
   }
 
   if (answers.language === undefined) {
-    const result = await p.select({
-      message: "Choose language",
-      options: optionize(LANGUAGES, LANGUAGE_LABELS),
-    });
-    if (p.isCancel(result)) throw cancel();
-    answers.language = result;
+    const allowed = allowedLanguages(answers.framework);
+    if (allowed.length === 1) {
+      // Single-language framework (Angular is TypeScript-only): no question.
+      answers.language = allowed[0];
+    } else {
+      const result = await p.select({
+        message: "Choose language",
+        options: optionize(allowed, LANGUAGE_LABELS),
+      });
+      if (p.isCancel(result)) throw cancel();
+      answers.language = result;
+    }
   }
 
   if (answers.styling === undefined) {

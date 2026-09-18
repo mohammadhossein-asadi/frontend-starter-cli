@@ -103,22 +103,22 @@ frontend-starter create my-app \
 
 ## `create` flags
 
-| Flag                            | Values                              | Notes                                                             |
-| ------------------------------- | ----------------------------------- | ----------------------------------------------------------------- |
-| `--preset`                      | `blog`, `dashboard`, `landing-page` | one choice for framework + styling + extras                       |
-| `--framework`                   | `react`, `next`, `vue`              | React uses Vite; Next uses the App Router                         |
-| `--typescript` / `--javascript` |                                     | shorthand for `--language`                                        |
-| `--language`                    | `typescript`, `javascript`          |                                                                   |
-| `--tailwind`                    |                                     | shorthand for `--styling tailwind`                                |
-| `--styling`                     | `tailwind`, `css-modules`, `plain`  |                                                                   |
-| `--package-manager`             | `pnpm`, `npm`, `yarn`, `bun`        | must be installed; never auto-installed                           |
-| `--eslint` / `--no-eslint`      |                                     | default: on                                                       |
-| `--prettier` / `--no-prettier`  |                                     | default: on                                                       |
-| `--git` / `--no-git`            |                                     | default: on                                                       |
-| `--install` / `--no-install`    |                                     | default: on (interactive), off (`--yes`)                          |
-| `--force`                       |                                     | overwrite files in an existing non-empty directory                |
-| `--dry-run`                     |                                     | preview the file tree and `package.json` without writing anything |
-| `--yes`                         |                                     | non-interactive; never prompt                                     |
+| Flag                            | Values                                                                | Notes                                                                                                        |
+| ------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `--preset`                      | `blog`, `dashboard`, `landing-page`                                   | one choice for framework + styling + extras                                                                  |
+| `--framework`                   | `react`, `next`, `vue`, `svelte`, `solid`, `qwik`, `astro`, `angular` | React/Vue/Svelte/Solid/Qwik use Vite; Next uses the App Router; Astro and Angular bring their own toolchains |
+| `--typescript` / `--javascript` |                                                                       | shorthand for `--language`                                                                                   |
+| `--language`                    | `typescript`, `javascript`                                            |                                                                                                              |
+| `--tailwind`                    |                                                                       | shorthand for `--styling tailwind`                                                                           |
+| `--styling`                     | `tailwind`, `css-modules`, `plain`                                    |                                                                                                              |
+| `--package-manager`             | `pnpm`, `npm`, `yarn`, `bun`                                          | must be installed; never auto-installed                                                                      |
+| `--eslint` / `--no-eslint`      |                                                                       | default: on                                                                                                  |
+| `--prettier` / `--no-prettier`  |                                                                       | default: on                                                                                                  |
+| `--git` / `--no-git`            |                                                                       | default: on                                                                                                  |
+| `--install` / `--no-install`    |                                                                       | default: on (interactive), off (`--yes`)                                                                     |
+| `--force`                       |                                                                       | overwrite files in an existing non-empty directory                                                           |
+| `--dry-run`                     |                                                                       | preview the file tree and `package.json` without writing anything                                            |
+| `--yes`                         |                                                                       | non-interactive; never prompt                                                                                |
 
 Global flags: `--verbose` (detailed diagnostics), `--quiet` (suppress
 informational output).
@@ -158,16 +158,23 @@ generation or in CI.
 
 ## Supported frameworks
 
-| Framework | Bundler/Router | Languages              | Styling                             |
-| --------- | -------------- | ---------------------- | ----------------------------------- |
-| React     | Vite           | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
-| Next.js   | App Router     | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
-| Vue 3     | Vite           | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
+| Framework | Bundler/Router   | Languages              | Styling                             |
+| --------- | ---------------- | ---------------------- | ----------------------------------- |
+| React     | Vite             | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
+| Next.js   | App Router       | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
+| Vue 3     | Vite             | TypeScript, JavaScript | Tailwind v4, CSS Modules, Plain CSS |
+| Svelte 5  | Vite             | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
+| SolidJS   | Vite             | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
+| Qwik      | Qwik City (Vite) | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
+| Astro     | Astro (Vite)     | TypeScript, JavaScript | Tailwind v4, Plain CSS              |
+| Angular   | @angular/build   | TypeScript             | Tailwind v4, CSS Modules, Plain CSS |
 
-Adding SvelteKit, Astro and friends is a registry entry away — see
-[CONTRIBUTING.md](CONTRIBUTING.md). Vue was added exactly that way; its
-implementation (`src/templates/vue/`, registry cases, overlay branches) is the
-reference example.
+Angular generates TypeScript-only projects (its CLI offers nothing else) and
+ships zoneless change detection with no zone.js dependency. Qwik pins Vite ^7
+until its plugin supports Vite 8; Astro pins Astro ^5 until its toolchain
+supports Node 20.19's floor.
+
+Adding a framework is a registry entry away
 
 ## Supported package managers
 

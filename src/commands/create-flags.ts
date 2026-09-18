@@ -67,7 +67,11 @@ export const CREATE_FLAG_SPECS: readonly CreateFlagSpec[] = [
     boolean: false,
     description: "start from a preset: blog | dashboard | landing-page",
   },
-  { key: "framework", boolean: false, description: "react | next | vue" },
+  {
+    key: "framework",
+    boolean: false,
+    description: "react | next | vue | svelte | solid | qwik | astro | angular",
+  },
   { key: "language", boolean: false, description: "typescript | javascript" },
   { key: "typescript", boolean: true, description: "shorthand for --language typescript" },
   { key: "javascript", boolean: true, description: "shorthand for --language javascript" },

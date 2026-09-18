@@ -2,12 +2,29 @@
  * Shared domain types for the frontend-starter CLI.
  *
  * These types are deliberately framework-agnostic: adding a new framework
- * (Vue, SvelteKit, Astro…) later must only require new template directories
- * plus entries in the registry — never changes to these core types.
+ * later must only require new template directories plus entries in the
+ * registry — never changes to these core types.
  */
 
-export const FRAMEWORKS = ["react", "next", "vue"] as const;
+export const FRAMEWORKS = [
+  "react",
+  "next",
+  "vue",
+  "svelte",
+  "solid",
+  "qwik",
+  "astro",
+  "angular",
+] as const;
 export type Framework = (typeof FRAMEWORKS)[number];
+
+/** Frameworks whose generated projects are TypeScript-only. */
+export const TYPESCRIPT_ONLY_FRAMEWORKS: readonly Framework[] = ["angular"];
+
+/** Languages a given framework supports (Angular requires TypeScript). */
+export function allowedLanguages(framework: Framework): readonly Language[] {
+  return TYPESCRIPT_ONLY_FRAMEWORKS.includes(framework) ? ["typescript"] : LANGUAGES;
+}
 
 export const LANGUAGES = ["typescript", "javascript"] as const;
 export type Language = (typeof LANGUAGES)[number];

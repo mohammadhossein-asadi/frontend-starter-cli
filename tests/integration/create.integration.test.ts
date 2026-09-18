@@ -169,7 +169,7 @@ describe("create (end-to-end)", () => {
         "create",
         "app4",
         "--framework",
-        "angular",
+        "ember",
         "--typescript",
         "--styling",
         "plain",
@@ -182,7 +182,7 @@ describe("create (end-to-end)", () => {
       cwd,
     );
     expect(bad.exitCode).toBe(1);
-    expect(`${bad.stdout}${bad.stderr}`).toMatch(/angular/i);
+    expect(`${bad.stdout}${bad.stderr}`).toMatch(/ember/i);
 
     const badPm = await runCli(
       [

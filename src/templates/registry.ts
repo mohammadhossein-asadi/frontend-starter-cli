@@ -8,9 +8,14 @@ import {
   reactBasePackage,
   nextBasePackage,
   vueBasePackage,
+  svelteBasePackage,
+  solidBasePackage,
+  qwikBasePackage,
+  astroBasePackage,
+  angularBasePackage,
   tailwindPackage,
   eslintPackage,
-  prettierPackage,
+  prettierPackageFor,
   cssModulesPackage,
 } from "./react/package.js";
 import { reactTsPart } from "./react/ts-part.js";
@@ -19,6 +24,15 @@ import { nextTsPart } from "./next/ts-part.js";
 import { nextJsPart } from "./next/js-part.js";
 import { vueTsPart } from "./vue/ts-part.js";
 import { vueJsPart } from "./vue/js-part.js";
+import { svelteTsPart } from "./svelte/ts-part.js";
+import { svelteJsPart } from "./svelte/js-part.js";
+import { solidTsPart } from "./solid/ts-part.js";
+import { solidJsPart } from "./solid/js-part.js";
+import { qwikTsPart } from "./qwik/ts-part.js";
+import { qwikJsPart } from "./qwik/js-part.js";
+import { astroTsPart } from "./astro/ts-part.js";
+import { astroJsPart } from "./astro/js-part.js";
+import { angularTsPart } from "./angular/ts-part.js";
 import {
   stylesheetFor,
   stylesheetPath,
@@ -47,6 +61,21 @@ export function resolveTemplate(config: ProjectConfig): ResolvedTemplate {
       break;
     case "vue":
       parts.push(config.language === "typescript" ? vueTsPart() : vueJsPart());
+      break;
+    case "svelte":
+      parts.push(config.language === "typescript" ? svelteTsPart() : svelteJsPart());
+      break;
+    case "solid":
+      parts.push(config.language === "typescript" ? solidTsPart() : solidJsPart());
+      break;
+    case "qwik":
+      parts.push(config.language === "typescript" ? qwikTsPart() : qwikJsPart());
+      break;
+    case "astro":
+      parts.push(config.language === "typescript" ? astroTsPart() : astroJsPart());
+      break;
+    case "angular":
+      parts.push(angularTsPart());
       break;
     default: {
       exhaustiveness(config.framework);
@@ -92,13 +121,28 @@ export function resolveTemplate(config: ProjectConfig): ResolvedTemplate {
     case "vue":
       fragments.push(vueBasePackage(config.language, config.projectName));
       break;
+    case "svelte":
+      fragments.push(svelteBasePackage(config.language, config.projectName));
+      break;
+    case "solid":
+      fragments.push(solidBasePackage(config.language, config.projectName));
+      break;
+    case "qwik":
+      fragments.push(qwikBasePackage(config.language, config.projectName));
+      break;
+    case "astro":
+      fragments.push(astroBasePackage(config.language, config.projectName));
+      break;
+    case "angular":
+      fragments.push(angularBasePackage(config.projectName));
+      break;
     default:
       exhaustiveness(config.framework);
   }
   if (config.styling === "tailwind") fragments.push(tailwindPackage(config.framework));
   if (config.styling === "css-modules") fragments.push(cssModulesPackage());
   if (config.eslint) fragments.push(eslintPackage(config.framework));
-  if (config.prettier) fragments.push(prettierPackage());
+  if (config.prettier) fragments.push(prettierPackageFor(config.framework, config.language));
 
   // 6. Shared files, always last so nothing overrides them.
   parts.push({
