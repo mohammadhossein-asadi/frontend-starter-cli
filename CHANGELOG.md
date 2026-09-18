@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-09-18
+
+### Added
+
+- **Project presets ("Starting points")** — `--preset blog | dashboard |
+landing-page`, an interactive "Starting point" question at the top of the
+  create flow, and a global-config `preset` key. A preset bundles framework,
+  language, styling and extras into one choice; the package manager stays
+  machine-specific and is auto-detected. Precedence is documented and tested:
+  flags > preset > global config > prompts. Adding a preset is pure data in
+  `src/config/presets.ts` (zod-validated, registry-checked at startup).
+- `frontend-starter templates` now lists the presets.
+- The `create` flags table in this README now lists `vue` (documentation
+  follow-up from 0.3.0).
+
 ## [0.3.1] - 2026-09-18
 
 ### Changed
