@@ -1,5 +1,5 @@
 import * as p from "@clack/prompts";
-import { FRAMEWORKS, LANGUAGES, STYLINGS, type Framework, type PackageManager } from "../types.js";
+import { FRAMEWORKS, LANGUAGES, STYLINGS, type PackageManager } from "../types.js";
 import { FRAMEWORK_LABELS } from "../templates/shared/labels.js";
 import { EnvironmentError } from "../utils/errors.js";
 import { validateProjectName } from "../utils/name-validation.js";
@@ -71,7 +71,7 @@ export async function promptForMissing(
   if (answers.framework === undefined) {
     const result = await p.select({
       message: "Choose framework",
-      options: optionize(FRAMEWORKS, FRAMEWORK_LABELS as Record<Framework, string>),
+      options: optionize(FRAMEWORKS, FRAMEWORK_LABELS),
     });
     if (p.isCancel(result)) throw cancel();
     answers.framework = result;
