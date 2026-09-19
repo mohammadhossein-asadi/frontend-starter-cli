@@ -130,9 +130,19 @@ describe("resolveTemplate", () => {
     expect(pkg2.devDependencies["eslint"]).toBeUndefined();
   });
 
-  it("next eslint config uses FlatCompat while react does not", () => {
+  it("next eslint config imports flat configs directly while react stays self-contained", () => {
     const next = resolveTemplate(baseConfig({ framework: "next", eslint: true }));
-    expect(next.files["eslint.config.mjs"]).toContain("FlatCompat");
+    const nextConfig = next.files["eslint.config.mjs"];
+    // eslint-config-next 16+ exports flat arrays natively — the config must
+    // import them directly (create-next-app style), never via FlatCompat.
+    expect(nextConfig).toContain('from "eslint-config-next/core-web-vitals"');
+    expect(nextConfig).toContain('from "eslint-config-next/typescript"');
+    expect(nextConfig).not.toContain("FlatCompat");
+    // The legacy bridge package is no longer needed.
+    const nextPkg = JSON.parse(next.files["package.json"] as string) as {
+      devDependencies?: Record<string, string>;
+    };
+    expect(nextPkg.devDependencies?.["@eslint/eslintrc"]).toBeUndefined();
 
     const react = resolveTemplate(baseConfig({ framework: "react", eslint: true }));
     expect(react.files["eslint.config.mjs"]).not.toContain("FlatCompat");
