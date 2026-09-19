@@ -3,6 +3,24 @@
 Thanks for helping improve the tool! This guide covers the architecture and
 the exact steps to extend it.
 
+## Finding and claiming an issue
+
+1. Pick an open issue labeled
+   [good first issue](https://github.com/mohammadhossein-asadi/frontend-starter-cli/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+   — each one lists the files to touch and a definition of done.
+2. **Claim it before you start:** comment `/take` on the issue. A bot assigns
+   you automatically and confirms it — that's your signal to begin. (The
+   claim matters: it prevents two people building the same thing.)
+3. Work on a fork/branch, open a **draft PR early** with `Closes #<issue>` in
+   the description so progress is visible.
+4. Need to step away? No problem — comment `/release` and the bot unassigns
+   you. If a claimed issue sees no activity for ~2 weeks, maintainers may
+   release the claim so someone else can pick it up (you can always reclaim
+   when you're back).
+5. Want to propose your _own_ starter task? Use the **Starter task pitch**
+   issue template. Once accepted it gets the `good first issue` label and is
+   claimable like any other.
+
 ## Development setup
 
 ```bash

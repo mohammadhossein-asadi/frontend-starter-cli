@@ -1,0 +1,94 @@
+name: Self-assign
+
+# Claim etiquette automation (documented in CONTRIBUTING.md):
+#   /take    on an open, unassigned issue -> assign the commenter
+#   /release -> unassign yourself
+# Runs only on plain issue comments (not PRs), and refuses to grab an
+# already-claimed issue.
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+
+concurrency:
+  group: self-assign-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  handle-claim:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const command = context.payload.comment.body.trim().toLowerCase();
+            if (command !== "/take" && command !== "/release") return;
+
+            const issue = context.payload.issue;
+            if (issue.pull_request) return; // PRs use review/assignment flows
+            if (issue.state !== "open") return;
+
+            const me = context.payload.comment.user.login;
+            const issueNumber = issue.number;
+            const repo = context.repo;
+            const assignees = (issue.assignees ?? []).map((a) => a.login);
+
+            if (command === "/take") {
+              if (assignees.length > 0) {
+                const holders = assignees.map((a) => "@" + a).join(", ");
+                await github.rest.issues.createComment({
+                  ...repo,
+                  issue_number: issueNumber,
+                  body:
+                    `This issue is already claimed by ${holders}. ` +
+                    "If the claim looks stale (no activity for ~2 weeks), ask here and a maintainer will release it.",
+                });
+                return;
+              }
+              await github.rest.issues.addAssignees({
+                ...repo,
+                issue_number: issueNumber,
+                assignees: [me],
+              });
+              await github.rest.issues.createComment({
+                ...repo,
+                issue_number: issueNumber,
+                body:
+                  `@${me} you've got it! 🚀 The issue is assigned to you.\n\n` +
+                  "- Fork, create a branch, and open a **draft PR** early with `Closes #" +
+                  issueNumber +
+                  "` in the description.\n" +
+                  "- Follow [CONTRIBUTING.md](https://github.com/" + repo.owner + "/" + repo.repo + "/blob/main/CONTRIBUTING.md) for setup and architecture.\n" +
+                  "- Need to step away? Comment `/release` and the issue goes back to the pool.",
+              });
+              await github.rest.reactions.createForIssueComment({
+                ...repo,
+                comment_id: context.payload.comment.id,
+                content: "rocket",
+              });
+              return;
+            }
+
+            // /release
+            if (!assignees.includes(me)) {
+              await github.rest.issues.createComment({
+                ...repo,
+                issue_number: issueNumber,
+                body: `@${me} is not currently assigned to this issue, so there is nothing to release.`,
+              });
+              return;
+            }
+            await github.rest.issues.removeAssignees({
+              ...repo,
+              issue_number: issueNumber,
+              assignees: [me],
+            });
+            await github.rest.issues.createComment({
+              ...repo,
+              issue_number: issueNumber,
+              body:
+                `@${me} released the claim — the issue is unassigned and open again. Thanks for letting us know!`,
+            });
