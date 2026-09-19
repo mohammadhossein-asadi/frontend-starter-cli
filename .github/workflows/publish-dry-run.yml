@@ -1,0 +1,60 @@
+name: Publish dry-run
+
+# Guards the npm package surface. On PRs that touch publish-relevant files,
+# pack the package exactly as a release would and verify the tarball contains
+# only the whitelisted publish surface (dist/, bin/, README, LICENSE,
+# CHANGELOG, package.json). Catches accidental file inclusion, missing build
+# output, or a broken bin before a release tag is ever pushed.
+
+on:
+  pull_request:
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "tsup.config.ts"
+      - "bin/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pack:
+    name: Pack and inspect tarball
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Publish dry-run (runs the prepack build)
+        run: npm publish --dry-run
+
+      - name: Inspect packed tarball against the publish whitelist
+        run: |
+          TARBALL=$(npm pack --silent | tail -1)
+          PATHS=$(tar -tzf "$TARBALL" | sed 's|^package/||' | grep -v '^$')
+
+          echo "$PATHS"
+          echo "---"
+
+          bad=$(printf '%s\n' "$PATHS" | grep -vE '^(package\.json|README\.md|LICENSE|CHANGELOG\.md|bin/|dist/)' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Unexpected files in the npm tarball:"
+            echo "$bad"
+            exit 1
+          fi
+
+          for required in package.json dist/index.js dist/index.d.ts bin/frontend-starter.js; do
+            if ! printf '%s\n' "$PATHS" | grep -qx "$required"; then
+              echo "::error::Required file missing from tarball: $required"
+              exit 1
+            fi
+          done
+
+          echo "Tarball contents match the publish whitelist."
