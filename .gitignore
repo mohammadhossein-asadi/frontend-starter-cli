@@ -10,5 +10,4 @@ Thumbs.db
 npm-debug.log*
 *.local
 
-# codebuff workspace marker
 .freebuff/
