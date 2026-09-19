@@ -6,6 +6,8 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    labels:
+      - dependencies
     groups:
       dev-minor-patch:
         dependency-type: development
@@ -19,3 +21,5 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    labels:
+      - dependencies
