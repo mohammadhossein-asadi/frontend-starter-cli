@@ -1,0 +1,62 @@
+name: Nightly Framework Builds
+
+# Template-rot detector: every day, generate one real project per supported
+# framework with the built CLI, then install, lint and build it for real.
+# If an upstream release breaks a template, this catches it within a day even
+# when nothing in this repository changed. Also runnable on demand via the
+# Actions tab (workflow_dispatch).
+
+on:
+  schedule:
+    # 03:07 UTC daily — off the top of the hour; GitHub throttles the whole
+    # fleet at midnight and delays can stretch long.
+    - cron: "7 3 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: nightly-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  framework:
+    name: ${{ matrix.framework }} (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Keep in sync with FRAMEWORKS in src/types.ts.
+        framework: [react, next, vue, svelte, solid, qwik, astro, angular]
+        node: [20, 22, 24]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build CLI
+        run: npm run build
+
+      - name: Generate project (built CLI, Tailwind + ESLint)
+        run: |
+          node bin/frontend-starter.js create app \
+            --framework ${{ matrix.framework }} \
+            --language typescript \
+            --styling tailwind \
+            --eslint --no-git --yes
+
+      - name: Install generated project
+        working-directory: app
+        run: npm install
+
+      - name: Lint generated project
+        working-directory: app
+        run: npm run lint
+
+      - name: Build generated project
+        working-directory: app
+        run: npm run build

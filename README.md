@@ -283,6 +283,18 @@ CI runs the full matrix on every push and PR:
 ubuntu-latest · windows-latest · macos-latest  ×  Node 20 · 22 · 24
 ```
 
+### Nightly framework builds
+
+Templates depend on upstream packages that release independently of this repo —
+scaffolded projects can break without a single commit here. A scheduled
+workflow ([nightly-builds.yml](.github/workflows/nightly-builds.yml)) guards
+against that rot: every day it uses the built CLI to generate one real project
+per framework (Tailwind + ESLint, TypeScript), then runs `npm install`,
+`npm run lint` and `npm run build` inside it — across Node 20 · 22 · 24. If an
+upstream release breaks a template, the failing leg names the framework the
+next morning. It can also be triggered manually from the Actions tab
+(workflow_dispatch).
+
 ### Architecture in one paragraph
 
 Everything is registry-driven. A validated `ProjectConfig` flows into
