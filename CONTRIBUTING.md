@@ -131,6 +131,10 @@ path (later parts win) but must not require changes elsewhere.
 ## Commit and PR style
 
 - Conventional commits preferred (`feat:`, `fix:`, `docs:`, `chore:`).
+- Commit messages carry only the author's own identity: do not append
+  tool-generated attribution trailers (e.g. `Generated with …` or bot
+  `Co-Authored-By:` lines). Human `Co-Authored-By:` trailers for real
+  collaborators are fine.
 - Every PR should include tests for new behavior; CI runs the matrix on
   Ubuntu, Windows and macOS across Node 20, 22 and 24.
 - Generated-project quality is part of the contract: if you touch templates,
