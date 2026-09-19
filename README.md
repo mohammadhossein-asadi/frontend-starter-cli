@@ -322,8 +322,9 @@ npm publish
 
 Contributions welcome — new templates, presets, prompt improvements and
 fixes. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the architecture tour and
-the step-by-step guide to adding a framework. Good first issues: additional
-presets, more `doctor` checks, editor config templates.
+the step-by-step guide to adding a framework. Looking for a starting point?
+Each [good first issue](https://github.com/mohammadhossein-asadi/frontend-starter-cli/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+lists the files to touch and a definition of done.
 
 ## License
 
