@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2026-09-19
+
+### Fixed
+
+- **Next.js templates**: `eslint-config-next` 16+ exports flat-config arrays
+  natively, so the generated `eslint.config.mjs` now imports them directly
+  (create-next-app style) instead of routing through the `FlatCompat` bridge —
+  which crashes on flat configs with "Converting circular structure to JSON".
+  The unneeded `@eslint/eslintrc` dependency is dropped. Caught by the new
+  nightly framework-builds workflow on its very first run.
+
 ## [0.5.0] - 2026-09-18
 
 ### Added

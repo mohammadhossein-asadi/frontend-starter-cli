@@ -288,14 +288,15 @@ const ESLINT_REACT_JS = [
 ].join("\n");
 
 const ESLINT_NEXT = [
-  'import { FlatCompat } from "@eslint/eslintrc";',
-  "",
-  "const compat = new FlatCompat({",
-  "  baseDirectory: import.meta.dirname,",
-  "});",
+  // eslint-config-next 16+ exports flat-config arrays directly — import them
+  // like create-next-app does. (Routing them through the FlatCompat bridge
+  // crashes: the legacy resolver cannot represent flat plugin objects.)
+  'import nextCoreWebVitals from "eslint-config-next/core-web-vitals";',
+  'import nextTypescript from "eslint-config-next/typescript";',
   "",
   "const eslintConfig = [",
-  '  ...compat.extends("next/core-web-vitals", "next/typescript"),',
+  "  ...nextCoreWebVitals,",
+  "  ...nextTypescript,",
   '  { ignores: [".next", "out", "node_modules"] },',
   "];",
   "",

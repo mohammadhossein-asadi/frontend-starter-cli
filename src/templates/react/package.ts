@@ -134,7 +134,6 @@ export function eslintPackage(framework: Framework): Json {
       break;
     case "next":
       devDependencies["eslint-config-next"] = "^16.3.5";
-      devDependencies["@eslint/eslintrc"] = "^3.3.7";
       break;
     case "vue":
       devDependencies["eslint-plugin-vue"] = "^10.11.0";
