@@ -1,0 +1,80 @@
+name: Welcome
+
+# Greets first-time contributors: their first open issue and their first PR
+# each get one welcome comment with pointers to CONTRIBUTING.md and the
+# nightly framework-builds matrix. Detection uses GitHub's own
+# author_association (FIRST_TIME_CONTRIBUTOR / FIRST_TIMER), so no state is
+# stored. A search-based duplicate guard prevents re-greeting if GitHub
+# redelivers, or if a second issue/PR arrives the same day.
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: welcome-${{ github.event_name }}-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const payload = context.payload;
+            const isPR = context.eventName === "pull_request_target";
+            const author = (isPR ? payload.pull_request.user.login : payload.issue.user.login);
+            const number = isPR ? payload.pull_request.number : payload.issue.number;
+
+            // Bots and the maintainer do not get greeted.
+            if (author === "github-actions[bot]" || author.endsWith("[bot]")) return;
+            if (author === context.repo.owner) return;
+
+            const kind = isPR ? "pull request" : "issue";
+            const isFirstTimer = [
+              "FIRST_TIME_CONTRIBUTOR",
+              "FIRST_TIMER",
+            ].includes(payload[isPR ? "pull_request" : "issue"].author_association);
+
+            if (!isFirstTimer) return;
+
+            // Duplicate guard: did we already welcome this author for this kind?
+            const q =
+              'repo:' + context.repo.owner + "/" + context.repo.repo +
+              ' commenter:' + author +
+              ' type:issue in:body "Thanks for opening your first';
+            const existing = await github.rest.search.issuesAndPullRequests({
+              q,
+              per_page: 1,
+            });
+            if (existing.data.total_count > 0) return;
+
+            const prMatrix = isPR
+              ? ("Every PR runs the full matrix (Ubuntu/Windows/macOS x Node 20/22/24); the nightly framework-builds workflow also generates, installs, lints and builds one project per framework daily to catch template rot. Neither should need anything from you — green is the norm here.")
+              : ("Fun fact about this repo's health model: a scheduled nightly workflow generates, installs, lints and builds one real project per supported framework across Node 20/22/24, so templates that break upstream get flagged within a day — even if this repo itself didn't change.");
+
+            const body = isPR
+              ? ("@" + author + " welcome, and thanks for your first pull request! 🎉\n\n" +
+                 "- [CONTRIBUTING.md](https://github.com/" + context.repo.owner + "/" + context.repo.repo + "/blob/main/CONTRIBUTING.md) covers development setup, the registry-driven architecture and the claim flow (`/take` / `/release`).\n" +
+                 "- " + prMatrix + "\n" +
+                 "- CI feedback usually lands within a couple of minutes; a maintainer will review shortly after.\n\n" +
+                 "If anything is unclear, just ask right here in the PR.")
+              : ("@" + author + " welcome, and thanks for your first issue! 🎉\n\n" +
+                 "- [CONTRIBUTING.md](https://github.com/" + context.repo.owner + "/" + context.repo.repo + "/blob/main/CONTRIBUTING.md) covers development setup, the architecture tour and how to claim an issue with `/take` before starting work.\n" +
+                 "- " + prMatrix + "\n" +
+                 "- If you pitched a new starter task, a maintainer will review it and label it `good first issue` once accepted — then comment `/take` to claim it.\n\n" +
+                 "If anything is unclear, just ask right here in the issue.");
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: number,
+              body,
+            });
