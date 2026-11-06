@@ -4,14 +4,14 @@
 
 **Create production-ready frontend projects in seconds.**
 
-Choose from React, Next.js, Vue, Svelte, SolidJS, Qwik, Astro, and Angular—then add TypeScript or JavaScript, Tailwind CSS, ESLint, Prettier, and Git with one interactive or scriptable command.
+Choose from React, Next.js, Vue, Svelte, SolidJS, Qwik, Astro, and Angular — then add TypeScript or JavaScript, Tailwind CSS v4, ESLint, Prettier, and Git with one interactive or scriptable command.
 
 [![CI](https://github.com/mohammadhossein-asadi/frontend-starter-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mohammadhossein-asadi/frontend-starter-cli/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/frontend-starter-cli)](https://www.npmjs.com/package/frontend-starter-cli)
 [![Node.js](https://img.shields.io/node/v/frontend-starter-cli)](https://www.npmjs.com/package/frontend-starter-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[✨ Features](#-features) · [🚀 Quick start](#-quick-start) · [🧰 Frameworks](#-supported-frameworks) · [⚙️ Commands](#️-commands) · [📖 Documentation](#-documentation) · [🤝 Contributing](#-contributing)
+[🇬🇧 English](README.md) • [🇮🇷 فارسی](README.fa.md) • [📖 Documentation](#-documentation) • [🚀 Quick Start](#-quick-start) • [🤝 Contributing](#-contributing)
 
 </div>
 
@@ -19,15 +19,15 @@ Choose from React, Next.js, Vue, Svelte, SolidJS, Qwik, Astro, and Angular—the
 
 ## 🌟 Overview
 
-**frontend-starter** is a cross-platform command-line tool for building complete, ready-to-work frontend project foundations. Instead of choosing a framework with one tool and then hand-assembling styling, linting, formatting, and Git configuration, pick your options once and generate a consistent project in one step.
+**frontend-starter** is a cross-platform command-line tool for building complete, ready-to-work frontend project foundations. Instead of choosing a framework generator and then hand-assembling styling, linting, formatting, and Git configuration, you pick your options once and generate a consistent project in one step.
 
-Use the interactive prompts to explore your choices, pass flags for a repeatable setup, or save your preferences and reuse them later. Templates are bundled with the CLI, so project files are generated locally before optional dependency installation begins.
+Use interactive prompts to explore choices, pass flags for repeatable setups, or save preferences in a global config and reuse them later. Templates are bundled with the CLI, so project files are generated locally before optional dependency installation begins.
 
 ### 🎯 Why frontend-starter?
 
 | Starting a project can mean… | frontend-starter helps by… |
 | --- | --- |
-| Comparing framework-specific generators and flags | Offering eight popular frameworks through one CLI |
+| Comparing framework-specific generators and flags | Offering 8 popular frameworks through one CLI |
 | Wiring up styling and tooling by hand | Composing framework-aware Tailwind, ESLint, and Prettier templates |
 | Repeating the same setup choices | Saving defaults in a cross-platform global config |
 | Guessing what a command will create | Previewing the file tree and `package.json` with `--dry-run` |
@@ -40,7 +40,7 @@ Use the interactive prompts to explore your choices, pass flags for a repeatable
 
 ### 🧰 One CLI, eight frameworks
 
-Generate projects for **React, Next.js, Vue, Svelte, SolidJS, Qwik, Astro,** and **Angular**. Pick a framework in the interactive flow or select it with `--framework`.
+Generate projects for **React, Next.js, Vue 3, Svelte 5, SolidJS, Qwik, Astro,** and **Angular**. Pick a framework in the interactive flow or select it with `--framework`.
 
 ### 🧩 Choose your project setup
 
@@ -60,12 +60,12 @@ Tailwind is configured for the framework's toolchain instead of merely being add
 - Existing directories are not overwritten silently; `--force` is explicit.
 - `--dry-run` previews generated files without writing them.
 - Templates are bundled locally; generation itself does not need a network connection.
-- If dependency installation fails after generation, the project files remain available for manual installation.
+- If dependency installation fails after generation, project files remain available for manual installation.
 - Non-interactive defaults avoid unexpected package installs.
 
 ### 🌍 Cross-platform
 
-The CLI is designed for Windows, macOS, and Linux. Continuous integration exercises all three operating systems and multiple supported Node.js versions.
+Designed for **Windows, macOS, and Linux**. CI exercises all three operating systems across supported Node.js versions.
 
 ---
 
@@ -84,20 +84,70 @@ The CLI is designed for Windows, macOS, and Linux. Continuous integration exerci
 
 **Template notes:**
 
-- Angular templates use TypeScript and zoneless change detection; Angular does not offer a JavaScript option here.
+- Angular templates use TypeScript and zoneless change detection.
 - Qwik currently uses Vite 7 to match its plugin's supported peer range.
 - Astro currently uses the Astro 5 line to support the project's Node.js floor.
 - React templates use React 19. Svelte templates use Svelte 5 runes; TypeScript projects include `svelte-check`.
-- Tailwind v4 configuration is emitted for the corresponding toolchain (including Vite, Next.js, Astro, and Angular).
+- Tailwind v4 configuration is emitted for the corresponding toolchain (Vite, Next.js, Astro, Angular).
 
 ---
 
-## 🚀 Quick start
+## 🏗️ Architecture
 
-### Requirements
+### Tech stack (CLI)
+
+| Layer | Technology |
+| --- | --- |
+| **Language** | TypeScript 5 (strict) |
+| **CLI** | Commander |
+| **Prompts** | `@clack/prompts` |
+| **Validation** | Zod |
+| **Process execution** | execa |
+| **Output styling** | picocolors |
+| **Build** | tsup |
+| **Tests** | Vitest |
+
+### How it works
+
+```text
+CLI and prompts
+      ↓
+Configuration and validation
+      ↓
+Template resolver (configuration → file map)
+      ↓
+Sandboxed generator (writes within the target directory)
+      ↓
+Optional post-generation tasks (dependency install, Git)
+      ↓
+Summary and next steps
+```
+
+### Project structure
+
+```text
+src/
+├── index.ts              # CLI wiring and error rendering
+├── types.ts              # Domain types and exit codes
+├── commands/             # create, doctor, init, templates
+├── config/               # Global config and project configuration
+├── prompts/              # Interactive setup flow
+├── services/             # Environment checks, package managers, Git
+├── templates/            # Framework registry, template parts, overlays
+├── generator/             # Sandboxed file writer
+└── utils/                # Paths, execution, logging, errors, validation
+```
+
+Generation templates do not shell out or access the network. Only optional post-generation actions (installing dependencies, Git) need external tools or connectivity. The generator checks output paths to keep writes inside the selected project directory.
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
 
 - **Node.js ≥ 20.19**
-- A supported package manager if you want the CLI to install generated dependencies: **pnpm, npm, yarn,** or **bun**.
+- A supported package manager if you want the CLI to install dependencies: **pnpm, npm, yarn,** or **bun**
 
 ### Install globally
 
@@ -105,7 +155,7 @@ The CLI is designed for Windows, macOS, and Linux. Continuous integration exerci
 npm install -g frontend-starter-cli
 ```
 
-Then start the interactive flow:
+Start the interactive flow:
 
 ```bash
 frontend-starter
@@ -123,7 +173,7 @@ npx frontend-starter-cli
 # Interactive project creation
 frontend-starter create
 
-# Choose a project name and framework options
+# Explicit options
 frontend-starter create my-app \
   --framework react \
   --typescript \
@@ -141,7 +191,7 @@ frontend-starter create my-app \
   --dry-run
 ```
 
-The interactive flow can start with a **Blog**, **Dashboard**, **Landing page**, or **Custom** setup, then guides you through the relevant framework and project choices.
+The interactive flow can start with a **Blog**, **Dashboard**, **Landing page**, or **Custom** setup, then guides you through framework and project choices.
 
 ---
 
@@ -152,7 +202,7 @@ The interactive flow can start with a **Blog**, **Dashboard**, **Landing page**,
 | `frontend-starter` | Start the interactive project creation flow. |
 | `frontend-starter create [name]` | Create a project with prompts or explicit options. |
 | `frontend-starter init` | Save personal defaults in the global configuration. |
-| `frontend-starter templates` | List supported frameworks, presets, and options (`list` is an alias). |
+| `frontend-starter templates` | List supported frameworks, presets, and options (`list` alias). |
 | `frontend-starter doctor` | Check the environment and available tooling. |
 | `frontend-starter --version` | Print the installed CLI version. |
 | `frontend-starter --help` | Show help. |
@@ -183,7 +233,7 @@ Global output flags:
 
 ### Non-interactive usage
 
-With `--yes` (or when no interactive terminal is available), provide the four core choices: framework, language, styling, and package manager. ESLint, Prettier, and Git default to **on**. Dependency installation defaults to **off** in non-interactive mode, so automation will not unexpectedly make a network request. Set options explicitly when you need different behavior:
+With `--yes` (or in a non-interactive terminal), provide the four core choices: framework, language, styling, and package manager. ESLint, Prettier, and Git default to **on**. Dependency installation defaults to **off** in non-interactive mode to avoid unexpected network requests.
 
 ```bash
 frontend-starter create my-app \
@@ -196,35 +246,21 @@ frontend-starter create my-app \
 
 ### Presets and option precedence
 
-A preset is a starting point that combines framework, language, styling, and extras; the package manager remains machine-specific and is detected or selected separately. You can choose a preset in the prompts or pass it directly:
+Presets bundle framework, language, styling, and extras; the package manager is machine-specific and detected/selected separately.
 
 ```bash
 frontend-starter create my-dashboard --preset dashboard
 ```
 
-When a choice is specified in multiple places, precedence is:
+Precedence when a choice is specified in multiple places:
 
 **flags > preset > global config > prompts > defaults**
-
-For example, `--preset blog --framework vue` uses Vue while retaining the other preset choices.
-
-### Preview with `--dry-run`
-
-```bash
-frontend-starter create my-app \
-  --framework next \
-  --typescript \
-  --tailwind \
-  --dry-run
-```
-
-The preview prints the files and complete `package.json` that would be generated, without creating or changing files. If the destination already exists and is non-empty, the preview warns so you can inspect the plan before generation.
 
 ---
 
 ## 📦 Package managers
 
-Supported managers are **pnpm**, **npm**, **yarn**, and **bun**. The CLI detects installed options and can use a configurable detection order (the default order is `pnpm`, `npm`, `yarn`, then `bun`).
+Supported managers: **pnpm**, **npm**, **yarn**, and **bun**. The CLI detects installed options and uses a configurable detection order (default: `pnpm`, `npm`, `yarn`, `bun`).
 
 A requested package manager that is not installed results in an actionable error. The CLI does not install package managers for you.
 
@@ -232,13 +268,13 @@ A requested package manager that is not installed results in an actionable error
 
 ## 🔧 Configuration
 
-Run `frontend-starter init` to save defaults and reduce repeated prompts. The configuration is stored in a platform-specific user configuration directory:
+Run `frontend-starter init` to save defaults and reduce repeated prompts. Configuration is stored in a platform-specific user directory:
 
 - **Windows:** `%APPDATA%\frontend-starter\config.json`
 - **macOS:** `~/Library/Preferences/frontend-starter/config.json`
 - **Linux:** `$XDG_CONFIG_HOME/frontend-starter/config.json` (or `~/.config/frontend-starter/config.json`)
 
-Example configuration:
+Example:
 
 ```json
 {
@@ -254,52 +290,13 @@ Example configuration:
 }
 ```
 
-The config file can also be placed at `~/.frontend-starter/config.json`. Set `FRONTEND_STARTER_CONFIG_DIR` to override the configuration directory (useful for tests and isolated environments).
-
-Configuration precedence is **flags > preset > global config > prompts > defaults**. The config contains project preferences; it is not intended for storing secrets.
+A config file can also live at `~/.frontend-starter/config.json`. Set `FRONTEND_STARTER_CONFIG_DIR` to override the config directory (useful for tests/isolated environments). Config contains project preferences; it is not intended for storing secrets.
 
 ---
 
-## 🏗️ How it works
+## 🛠️ Development
 
-The generator is registry-driven. Your validated project configuration is resolved into a template file map, then the generator writes those files to the target directory. Framework bases are composed with language slices, styling and tooling overlays, and shared files such as the generated README and `.gitignore`.
-
-```text
-CLI and prompts
-      ↓
-Configuration and validation
-      ↓
-Template resolver (configuration → file map)
-      ↓
-Sandboxed generator (writes within the target directory)
-      ↓
-Optional post-generation tasks (dependency install, Git)
-      ↓
-Summary and next steps
-```
-
-Repository layout:
-
-```text
-src/
-├── index.ts              # CLI wiring and error rendering
-├── types.ts              # Domain types and exit codes
-├── commands/             # create, doctor, init, templates
-├── config/               # Global config and project configuration
-├── prompts/              # Interactive setup flow
-├── services/             # Environment checks, package managers, Git
-├── templates/            # Framework registry, template parts, overlays
-├── generator/             # Sandboxed file writer
-└── utils/                 # Paths, execution, logging, errors, validation
-```
-
-Generation templates do not shell out or access the network. Only optional post-generation actions such as installing dependencies need external tools or connectivity. The generator checks output paths to keep writes inside the selected project directory.
-
----
-
-## 🧪 Development and testing
-
-### Set up locally
+### Local setup
 
 ```bash
 git clone https://github.com/mohammadhossein-asadi/frontend-starter-cli.git
@@ -307,38 +304,38 @@ cd frontend-starter-cli
 npm install
 ```
 
-### Useful scripts
+### Scripts
 
 ```bash
 npm run dev          # Watch-mode build
-npm test             # Unit and integration tests
-npm run test:watch   # Run tests in watch mode
-npm run coverage     # Run tests with coverage
 npm run build        # Build to dist/
-npm run lint         # Run ESLint
-npm run typecheck    # Run TypeScript checks
-npm run format       # Format files with Prettier
+npm test             # Unit and integration tests
+npm run test:watch   # Tests in watch mode
+npm run coverage     # Coverage
+npm run lint         # ESLint
+npm run typecheck    # TypeScript checks
+npm run format       # Prettier
 npm run format:check # Check formatting
 ```
 
-Integration tests run the built CLI through `bin/` and `dist/`; run `npm run build` after source changes before relying on those tests.
+Integration tests run the built CLI via `bin/` and `dist/`; run `npm run build` after source changes before relying on them.
 
 ### What is tested
 
-- Name and input validation, configuration precedence, presets, and template composition.
+- Name/input validation, configuration precedence, presets, and template composition.
 - Framework, language, and styling combinations.
 - End-to-end generation, dry-run behavior, existing-directory safety, Git initialization, and exit codes.
 - Generated project templates in CI, including install, lint, and production build checks.
 
-CI runs across **Ubuntu, Windows, and macOS**, with **Node.js 20, 22, and 24**. A scheduled workflow also checks generated framework projects against upstream dependency changes.
+CI runs on **Ubuntu, Windows, and macOS** with **Node.js 20, 22, and 24**. A scheduled workflow checks generated framework projects against upstream dependency changes.
 
 ---
 
 ## 🚨 Troubleshooting
 
-### `pnpm was not found`
+### `pnpm` (or another manager) was not found
 
-The selected package manager is not installed. Install it, or select one that is available, for example:
+The selected package manager is not installed. Install it or choose an available one:
 
 ```bash
 frontend-starter create my-app --package-manager npm
@@ -346,11 +343,11 @@ frontend-starter create my-app --package-manager npm
 
 ### The destination directory already exists
 
-The CLI avoids silently overwriting files. Choose another project name, or use `--force` when you intentionally want to add template files to an existing non-empty directory.
+The CLI avoids silently overwriting files. Choose another name, or use `--force` to intentionally add template files to an existing non-empty directory.
 
 ### Dependency installation failed
 
-The generated project files are already in place. Change into the project directory and run the install command for your package manager, for example:
+Generated files are already in place. Install manually:
 
 ```bash
 cd my-app
@@ -366,9 +363,7 @@ git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
 ```
 
-### Need help diagnosing an environment issue?
-
-Run the doctor command with verbose output and include the result when opening an issue:
+### Environment diagnosis
 
 ```bash
 frontend-starter doctor --verbose
@@ -378,10 +373,12 @@ frontend-starter doctor --verbose
 
 ## 📚 Documentation
 
-- [Contributing guide](CONTRIBUTING.md) — architecture, development workflow, and adding frameworks or overlays.
-- [Changelog](CHANGELOG.md) — release history and notable changes.
-- [Issues](https://github.com/mohammadhossein-asadi/frontend-starter-cli/issues) — bug reports and feature requests.
-- [Discussions](https://github.com/mohammadhossein-asadi/frontend-starter-cli/discussions) — questions and community conversation.
+| Document | Description |
+| --- | --- |
+| [Contributing guide](CONTRIBUTING.md) | Architecture, development workflow, adding frameworks/overlays |
+| [Changelog](CHANGELOG.md) | Release history and notable changes |
+| [Issues](https://github.com/mohammadhossein-asadi/frontend-starter-cli/issues) | Bug reports and feature requests |
+| [Discussions](https://github.com/mohammadhossein-asadi/frontend-starter-cli/discussions) | Questions and community conversation |
 
 ---
 
@@ -398,18 +395,39 @@ npm publish
 
 ## 🤝 Contributing
 
-Contributions are welcome, including framework templates, presets, prompt improvements, documentation, and bug fixes.
+Contributions are welcome — framework templates, presets, prompt improvements, documentation, and bug fixes.
 
-1. Review the [contributing guide](CONTRIBUTING.md) for the architecture and setup instructions.
+1. Review the [contributing guide](CONTRIBUTING.md).
 2. For a `good first issue`, follow the issue's instructions to claim it before starting.
 3. Open a draft pull request early when useful, and include tests for new behavior.
 4. If you change templates, verify that a generated project installs, lints, and builds.
 
 ---
 
+## 📋 Roadmap
+
+- [x] 8 framework generators (React, Next.js, Vue, Svelte, SolidJS, Qwik, Astro, Angular)
+- [x] TypeScript/JavaScript, Tailwind v4, ESLint, Prettier, Git
+- [x] Presets (blog, dashboard, landing-page)
+- [x] `--dry-run`, `--force`, global config, `doctor`
+- [x] Cross-platform CI (Ubuntu, Windows, macOS)
+- [ ] Additional presets and template variants
+- [ ] More styling/tooling integrations (as requested)
+- [ ] Community-contributed framework overlays
+
+---
+
 ## 📄 License
 
-This project is released under the [MIT License](LICENSE).
+**MIT License** — See [LICENSE](LICENSE).
+
+---
+
+## 🙏 Acknowledgments
+
+- **Commander**, **@clack/prompts**, **Zod**, **execa**, **picocolors** — CLI foundations
+- **tsup**, **Vitest**, **TypeScript**, **ESLint**, **Prettier** — build & quality
+- The ecosystems behind **React, Next.js, Vue, Svelte, SolidJS, Qwik, Astro, Angular, Vite, Tailwind CSS**
 
 ---
 
@@ -417,6 +435,6 @@ This project is released under the [MIT License](LICENSE).
 
 **Build your next frontend project with less setup and more momentum.**
 
-[⭐ Star frontend-starter on GitHub](https://github.com/mohammadhossein-asadi/frontend-starter-cli) · [📦 View on npm](https://www.npmjs.com/package/frontend-starter-cli) · [🐛 Report an issue](https://github.com/mohammadhossein-asadi/frontend-starter-cli/issues)
+[🇬🇧 English](README.md) • [🇮🇷 فارسی](README.fa.md) • [⭐ Star on GitHub](https://github.com/mohammadhossein-asadi/frontend-starter-cli) • [📦 View on npm](https://www.npmjs.com/package/frontend-starter-cli) • [🐛 Report an issue](https://github.com/mohammadhossein-asadi/frontend-starter-cli/issues)
 
 </div>
